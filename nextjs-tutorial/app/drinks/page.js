@@ -1,7 +1,6 @@
-import React from 'react'
+import DrinksList from "../components/DrinksList";
 
 const URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a'
-// const URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?f=ab'
 
 const fetchDrinks = async () => {
     // just for demo purposes
@@ -19,7 +18,9 @@ const DrinksPage = async () => {
    const data = await fetchDrinks()
    console.log(data)
     return (
-      <div className='text-7xl'>DrinksPage</div>
+      <div >
+        <DrinksList drinks={data.drinks} key={data.idDrink} />
+      </div>
     )
 }
 
