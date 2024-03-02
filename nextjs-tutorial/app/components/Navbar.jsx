@@ -3,8 +3,9 @@ import Link from "next/link"
 const links = [
     {href: "/client", label: "client"},
     {href: "/drinks", label: "drink"},
+    {href: "/prisma-example", label: "prisma"},
     {href: "/tasks", label: "tasks"},
-    {href: "/query", label: "react-query"},
+    // {href: "/query", label: "react-query"},
 ]
 
 const Navbar = () => {
