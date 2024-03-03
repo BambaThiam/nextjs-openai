@@ -1,19 +1,27 @@
-"use client"
-import React, { useState } from 'react'
+import { revalidatePath } from "next/cache"
 
-const TaskForm = ({task, handleSubmitHandler, onChangeHandler}) => {
-    // const [content, setContent] = useState('')
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault()
-    //     console.log({task})
-    // }
+const createTask = async (formData) => {
+    "use server"
+    const content = formData.get('content')
+    // console.log(content)
+    await prisma.task.create({
+        data: {
+            content
+        }
+    })
+    revalidatePath('/tasks')
+    
+}
+const TaskForm = () => {
   return (
-    <form onSubmit={handleSubmitHandler} className='flex'>
-      <input type="text" placeholder="Type here" className="input input-bordered input-primary flex-1 " onChange={onChangeHandler} />
-      <button type='submit' className='btn btn-primary'>CREATE TASK</button>
+    <form action={createTask}>
+        <div className='join w-full'>
+            <input type="text" placeholder="Type here" className="input input-bordered join-item w-full input-primary flex-1" name='content' required />
+            <button type='submit' className='btn btn-primary join-item'>CREATE TASK</button>
+        </div>
     </form>
   )
 }
+
 
 export default TaskForm

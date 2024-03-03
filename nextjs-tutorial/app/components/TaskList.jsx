@@ -32,7 +32,8 @@ import Link from 'next/link'
         createdAt: 'desc'
       }
     })
-    if (!tasks) {
+    // if (!tasks) {
+    if (tasks.length === 0) {
       return <h2 className='mt-8 font-medium text-lg'>No tasks to show...</h2>
     }
     return (
@@ -43,7 +44,7 @@ import Link from 'next/link'
             <div className='flex gap-4 items-center'>
               {/* <button className="btn btn-success">EDIT</button>
               <button className="btn btn-error">DELETE</button> */}
-              <Link href={`/tasks/${task.id}`} className="btn btn-success">EDIT</Link>
+              <Link href={`/tasks/${task.id}`} className="btn btn-accent btn-xs">EDIT</Link>
               <DeleteForm id={task.id} />
             </div>
           </li>
