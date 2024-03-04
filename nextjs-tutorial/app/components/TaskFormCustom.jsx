@@ -33,7 +33,7 @@ const TaskFormCustom = () => {
       toast.success("Task created successfully")
       return
     }
-  })
+  }, [state])
   
   return (
     <form action={formAction}>
