@@ -3,6 +3,7 @@
 import { deleteTask } from '@/utils/actions'
 import { useEffect } from 'react'
 import { useFormStatus, useFormState } from "react-dom"
+import { toast } from "react-hot-toast"
 
 const SubmitBtn = () => {
   const {pending} = useFormStatus()
@@ -24,7 +25,7 @@ const DeleteForm = ({id}) => {
   const [state, formAction] = useFormState(deleteTask, initialState)
   useEffect(() => {
     if (state.message === 'error...') {
-      toast.error("There was an error...")
+      toast.error("There was an error for deleting...")
       return
     }
     if (state.message === 'success!!!') {
