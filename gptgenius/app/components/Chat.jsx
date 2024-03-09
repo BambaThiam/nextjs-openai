@@ -28,7 +28,7 @@ const Chat = () => {
         <form onSubmit={handleSubmit} className='max-w-4xl pt-12'>
           <div className='join w-full'>
             <input type="text" placeholder="Message GeniusGPT" className='input input-bordered join-item w-full' value={text} required onChange={(e) => setText(e.target.value)} />
-            <button type="submit">Ask question</button>
+            <button className='btn btn-primary join-item' type="submit" >Ask question</button>
             <toast/>
           </div>
         </form>
