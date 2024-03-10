@@ -6,16 +6,24 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 })
 
-export const generateChatResponse = async (message) => {
-    const response = await openai.chat.completions.create({
+export const generateChatResponse = async (chatMessages) => {
+    try {
+        const response = await openai.chat.completions.create({
         messages: [
             {role: "system", content: "you are a helpful assistant"},
-            {role: "user", content: message}
+            //for context
+            ...chatMessages,
+            // {role: "user", content: message}
         ],
         model: "gpt-3.5-turbo",
-        temperature: 0.5
+        temperature: 0
     })
-    console.log("data : ",response.choices[0].message)
-    console.log("response : ",response)
-    return "awesome"
+    // console.log("data : ",response.choices[0].message)
+    // console.log("response : ",response)
+    return response.choices[0].message
+    } catch (error) {
+      return null
+    }
+    
+    
 }
