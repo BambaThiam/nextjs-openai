@@ -9,16 +9,23 @@ import { toast } from "react-hot-toast"
 const NewTour = () => {
   // const [city, setCity] = useState('')
   // const [country, setCountry] = useState('')
+  const queryClient = useQueryClient()
   const { mutate, isPending, data: tour } = useMutation({
     mutationFn: async(destination) => {
-      const newTour = await generateTourResponse(destination)
-      if (!newTour) {
-        toast.error('No matching city found...')
-        return
+      const existingTour = await getExistingTour(destination)
+      if (existingTour) {
+        toast.error('Tour already exists!')
+        return existingTour
       }
-      toast.success('Tour created successfully!')
-      return newTour
-    }
+      const newTour = await generateTourResponse(destination)
+      if (newTour) {
+        await createNewTour(newTour);
+        queryClient.invalidateQueries({ queryKey: ['tours'] });
+        return newTour;
+      }
+      toast.error('No matching city found...');
+      return null;
+    },
   })
   const handleSubmit = (e) => {
     e.preventDefault()
