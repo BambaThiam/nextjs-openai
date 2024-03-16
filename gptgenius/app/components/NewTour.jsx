@@ -1,14 +1,18 @@
 "use client"
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import {createNewTour, generateTourResponse, getExistingTour } from "@/utils/action"
+import {createNewTour, fetchUserTokensById, generateTourResponse, getExistingTour, subtractTokens } from "@/utils/action"
 import TourInfo from "./TourInfo"
 import { toast } from "react-hot-toast"
+import { useAuth } from "@clerk/nextjs"
 // import { useState } from "react"
 
 const NewTour = () => {
   // const [city, setCity] = useState('')
   // const [country, setCountry] = useState('')
+
+  const { userId } = useAuth();//for tokens
+
   const queryClient = useQueryClient()
   const { mutate, isPending, data: tour } = useMutation({
     mutationFn: async(destination) => {
@@ -17,14 +21,31 @@ const NewTour = () => {
         toast.error('Tour already exists!')
         return existingTour
       }
-      const newTour = await generateTourResponse(destination)
-      if (newTour) {
-        await createNewTour(newTour);
-        queryClient.invalidateQueries({ queryKey: ['tours'] });
-        return newTour;
+
+      const currentTokens = await fetchUserTokensById(userId);//for tokens
+      if (currentTokens < 300) {
+        toast.error('Token balance too low....');
+        return;
       }
-      toast.error('No matching city found...');
-      return null;
+      const newTour = await generateTourResponse(destination)
+      if (!newTour) {
+        toast.error('No matching city found...');
+        return null;
+      }
+
+      const response = await createNewTour(newTour.tour)
+      queryClient.invalidateQueries({ queryKey: ['tours'] });
+      const newTokens = await subtractTokens(userId, newTour.tokens);
+      toast.success(`${newTokens} tokens remaining...`);
+      return newTour.tour;
+      
+      // if (newTour) {
+      //   await createNewTour(newTour);
+      //   queryClient.invalidateQueries({ queryKey: ['tours'] });
+      //   return newTour;
+      // }
+      // toast.error('No matching city found...');
+      // return null;
     },
   })
   const handleSubmit = (e) => {
